@@ -1,0 +1,41 @@
+def main(x):
+    match x[3]:
+        case 1964:
+            match x[1]:
+                case 'NL':
+                    match x[2]:
+                        case 1980:
+                            return 0
+                        case 1988:
+                            return 1
+                        case 2014:
+                            return 2
+                case 'GAP':
+                    match x[0]:
+                        case 1978:
+                            return 3
+                        case 1975:
+                            return 4
+                        case 2020:
+                            return 5
+        case 1969:
+            match x[0]:
+                case 1978:
+                    return 6
+                case 1975:
+                    match x[1]:
+                        case 'NL':
+                            return 7
+                        case 'GAP':
+                            return 8
+                case 2020:
+                    match x[1]:
+                        case 'NL':
+                            return 9
+                        case 'GAP':
+                            return 10
+        case 2019:
+            return 11
+
+
+print(main([1975, 'GAP', 1988, 1969]))
