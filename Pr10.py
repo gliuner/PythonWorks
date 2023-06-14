@@ -1,3 +1,73 @@
+class MealyError(Exception):
+    pass
+
+
+def raises(method, error):
+    output = None
+    try:
+        output = method()
+    except Exception as e:
+        assert type(e) == error
+    assert output is None
+
+
+class Meely:
+    def __init__(self):
+        self.status = 'A'
+        self.root = {'A': {'apply': ['B', 0]},
+                     'B': {'apply': ['C', 1]}, 'C': {'apply': ['D', 2], 'pluck': ['G', 3]},
+                     'D': {'apply': ['E', 4]},
+                     'E': {'pluck': ['F', 5]},
+                     'F': {'pluck': ['F', 7], 'apply': ['G', 6]},
+                     'G': {'pluck': ['G', 8], 'apply': ['D', 9]}}
+
+    def apply(self):
+        if 'apply' in self.root[self.status].keys():
+            a = self.root[self.status]['apply'][1]
+            self.status = self.root[self.status]['apply'][0]
+            return a
+        else:
+            raise MealyError("apply")
+
+    def pluck(self):
+        if 'pluck' in self.root[self.status].keys():
+            a = self.root[self.status]['pluck'][1]
+            self.status = self.root[self.status]['pluck'][0]
+            return a
+        else:
+            raise MealyError("pluck")
+
+
+def main():
+    o = Meely()
+    return o
+
+#Прописывается то, как дойти до этой точки, а не то откуда из нее можно выйти
+#Как я поняла, если из нее можно выйти через оба метода, проверка не нужна, иначе делать проверку на другой метод
+
+def test():
+    o = main()  # A
+    raises(lambda: o.pluck(), MealyError)
+    o.apply()  # B
+    raises(lambda: o.pluck(), MealyError)
+    o.apply()  # C
+    o.pluck()  # G
+    o.pluck()  # G
+    o.apply()  # D
+    raises(lambda: o.pluck(), MealyError)
+    o.apply()  # E
+    raises(lambda: o.apply(), MealyError)
+    o.pluck()  # F
+    o.pluck()  # F
+    o.apply()  # G
+    o = main()  # A
+    o.apply()  # B
+    o.apply()  # C
+    o.apply()  # D
+#----------------------------------------------------------------------------
+
+
+
 '''class MealyError(Exception):
     pass
 
